@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ReservaEditDlg" widgetVar="ReservaEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditReservaTitle}">
+            <h:form id="ReservaEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{reservaController.selected != null}">
+
+
+                        <p:outputLabel value="Fecha reserva" for="fechaReserva" />
+                        <p:calendar id="fechaReserva" pattern="dd/MM/yyyy" value="#{reservaController.selected.fechaReserva}" title="#{bundle.EditReservaTitle_fechaReserva}" required="true" requiredMessage="#{bundle.EditReservaRequiredMessage_fechaReserva}" showOn="button"/>
+
+                        <p:outputLabel value="Cliente" for="clienteId" />
+                        <p:selectOneMenu id="clienteId" value="#{reservaController.selected.clienteId}" required="true" requiredMessage="#{bundle.EditReservaRequiredMessage_clienteId}"
+                                         filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{clienteController.itemsAvailableSelectOne}"
+                                           var="clienteIdItem"
+                                           itemValue="#{clienteIdItem}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Mesa" for="mesaId" />
+
+                        <p:selectOneMenu id="mesaId" value="#{reservaController.selected.mesaId}" required="true" requiredMessage="#{bundle.EditReservaRequiredMessage_mesaId}"
+                                         filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{mesaController.itemsAvailableSelectOne}"
+                                           var="mesaIdItem"
+                                           itemValue="#{mesaIdItem}"/>
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel value="#{bundle.CreateReservaLabel_pax}" for="pax" />
+                        <p:inputText id="pax" value="#{reservaController.selected.pax}" title="#{bundle.CreateReservaTitle_pax}" required="true" requiredMessage="#{bundle.CreateReservaRequiredMessage_pax}"/>
+
+
+
+                        <p:outputLabel value="#{bundle.CreateReservaLabel_observaciones}" for="observaciones" />
+                        <p:inputTextarea id="observaciones" rows="5" cols="30"
+                                         value="#{reservaController.selected.observaciones}" title="#{bundle.CreateReservaTitle_observaciones}" />
+
+
+
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{reservaController.update}" value="#{bundle.Save}" update="display,:ReservaListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ReservaEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="ReservaEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

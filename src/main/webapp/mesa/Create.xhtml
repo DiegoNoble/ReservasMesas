@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="MesaCreateDlg" widgetVar="MesaCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateMesaTitle}">
+            <h:form id="MesaCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{mesaController.selected != null}">
+                        
+                        <p:outputLabel value="#{bundle.CreateMesaLabel_pdvId}" for="pdvId" />
+                        <p:selectOneMenu id="pdvId" value="#{mesaController.selected.pdvId}" required="true" requiredMessage="#{bundle.EditMesaRequiredMessage_pdvId}">
+                            <f:selectItems value="#{pdvController.itemsAvailableSelectOne}"
+                                           var="pdvIdItem"
+                                           itemLabel="#{pdvIdItem.nombre}"
+                                           itemValue="#{pdvIdItem}"/>
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel value="#{bundle.CreateMesaLabel_numero}" for="numero" />
+                        <p:inputText id="numero" value="#{mesaController.selected.numero}" title="#{bundle.CreateMesaTitle_numero}" required="true" requiredMessage="#{bundle.CreateMesaRequiredMessage_numero}"/>
+                        <p:outputLabel value="#{bundle.CreateMesaLabel_lugares}" for="lugares" />
+                        <p:inputText id="lugares" value="#{mesaController.selected.lugares}" title="#{bundle.CreateMesaTitle_lugares}" required="true" requiredMessage="#{bundle.CreateMesaRequiredMessage_lugares}"/>
+                        
+                        
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{mesaController.create}" value="#{bundle.Save}" update="display,:MesaListForm:datalist,:growl" oncomplete="handleSubmit(args,'MesaCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="MesaCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,47 @@
+.ui-widget {
+    font-size: 12px !important;
+
+}
+.ui-layout-north {
+
+    z-index: 20 !important;
+    overflow: visible !important;;
+}
+.ui-layout-north .ui-layout-unit-content {
+    overflow: visible !important;
+}
+.ui-widget-header {
+    font-size: 13px !important;
+    text-align: center;
+    text-transform: uppercase;
+}
+.ui-button {
+    margin-top: 10px !important;
+    text-align: end;
+}
+#filtro{
+    font-style: oblique;
+    padding-left: 20px;
+    padding-bottom: 10px;
+
+    background-color: beige
+}
+
+#cabecera{
+    font-size: 15px !important;
+    text-align: center;
+    text-transform: uppercase;
+}
+#menuForm{
+    font-size: 50px !important;
+}
+
+#login{
+	background-color: #f2f2f2;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	margin-top: 8px;  
+	padding: 10px;
+	
+	
+}
