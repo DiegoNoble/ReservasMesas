@@ -7,15 +7,14 @@
 
     <h:head id="login">
         <title><ui:insert name="title">Sistema de gestión de reservas de Gastronomía</ui:insert></title>
-        <h:outputStylesheet library="css" name="jsfcrud.css"/>
-        <h:outputScript library="js" name="jsfcrud.js"/>
+        
     </h:head>
 
-    <h:body>
-        <center>
-        <p:layout  fullPage="true">
-            <p:layoutUnit position="center" size="1000" header="Login de usuario" >
-                <br/>
+    <h:body onload="document.content.dialog.login.usuario.focus();">
+        <div>
+            <p:dialog header="Login de usuario" id="dialog" minWidth="400"
+                      width="400" modal="true" closable="false" position="center"
+                      showEffect="slide" draggable="true" resizable="false" visible="true">
                 <h:form >
                     <p:messages autoUpdate="true" showDetail="true"/>
 
@@ -34,23 +33,8 @@
 
 
                 </h:form>
-            </p:layoutUnit>
-
-            <p:layoutUnit position="north" size="30" header="Sistema de Gestión de reservas de Mesas">
-                <ui:insert name="header"/>
-
-            </p:layoutUnit>
-
-            <p:layoutUnit position="south">
-                <ui:insert name="footer"/>
-                <h:outputText value="Desarrollado por Diego Noble - Dep. Sistemas Uruguay" />
-
-            </p:layoutUnit>
-
-
-
-        </p:layout>
-            </center>
+            </p:dialog>
+        </div>        
     </h:body>
 
 
