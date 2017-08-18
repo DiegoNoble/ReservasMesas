@@ -33,10 +33,11 @@
             <version>5.0</version>
         </dependency>
         
-         <dependency>
-            <groupId>org.primefaces.extensions</groupId>
-            <artifactId>all-themes</artifactId>
-            <version>1.0.8</version>
+        <dependency>
+            <groupId>org.primefaces.themes</groupId>
+            <artifactId>afterdark</artifactId>
+            <version>1.0.10</version>
+            <scope>provided</scope>
         </dependency>
         
         <dependency>
@@ -103,5 +104,6 @@
             <layout>default</layout>
             <name>Repository for library PrimeFaces-maven-lib</name>
         </repository>
+       
     </repositories>
 </project>
