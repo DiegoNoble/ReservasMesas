@@ -18,20 +18,22 @@
                 <p:panel header="#{bundle.ListReservaTitle}">
 
                     <div id="filtro" >
-                        <p:outputLabel value="Fecha reserva" for="fechaReserva" />
-                        &nbsp;
-                        <p:calendar id="fechaReserva" pattern="dd/MM/yyyy"  required="true" showOn="button" value="#{reservaController.fechaReserva}" />
-                        &nbsp;
-                        <p:outputLabel value="Punto de venta" for="pdvId" />
-                        &nbsp;
-                        <p:selectOneMenu id="pdvId" value="#{reservaController.pdv}" required="true" >
-                            <f:selectItems value="#{pdvController.itemsAvailableSelectOne}"
-                                           var="pdvIdItem"
-                                           itemLabel="#{pdvIdItem.nombre}"
-                                           itemValue="#{pdvIdItem}"/>
-                        </p:selectOneMenu>
-                        &nbsp;&nbsp;
-                        <p:commandButton id="btnBuscar" value="Buscar" actionListener="#{reservaController.getMesasPorFechaYPdv()}" update="datalist"/> 
+                        
+                                <p:outputLabel value="Fecha reserva" for="fechaReserva" />
+                                &nbsp;
+                                <p:calendar id="fechaReserva" pattern="dd/MM/yyyy" value="#{reservaController.fechaReserva}" />
+                                &nbsp;
+                                <p:outputLabel value="Punto de venta" for="pdvId" />
+                                &nbsp;
+                                <p:selectOneMenu id="pdvId" value="#{reservaController.pdv}" >
+                                    <f:selectItems value="#{pdvController.itemsAvailableSelectOne}"
+                                                   var="pdvIdItem"
+                                                   itemLabel="#{pdvIdItem.nombre}"
+                                                   itemValue="#{pdvIdItem}"/>
+                                </p:selectOneMenu>
+                                &nbsp;&nbsp;
+                                <p:commandButton id="btnBuscar" value="Buscar" actionListener="#{reservaController.getMesasPorFechaYPdv()}" update="datalist"/> 
+                           
                     </div>
                     <br></br>
                     <p:dataTable id="datalist"

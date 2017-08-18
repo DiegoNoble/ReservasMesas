@@ -59,25 +59,30 @@ public class ReservaController implements Serializable {
     }
 
     public void create() {
-        selected.setFechaHoraRegistro(new Date());
-        Integer lugaresDisponibles = getFacade().lugaresDisponibles(selected.getMesaId().getLugares(), selected.getFechaReserva(), selected.getMesaId()) - selected.getPax();
-        selected.setLugaresDisponibles(lugaresDisponibles);
-        if (lugaresDisponibles < 0) {
-            JsfUtil.addErrorMessage("La mesa no tiene suficientes lugares disponibles para esa fecha");
-        } else {
-            persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ReservaCreated"));
+        try {
+            selected.setFechaHoraRegistro(new Date());
+            Integer lugaresDisponibles = getFacade().lugaresDisponibles(selected.getMesaId().getLugares(), selected.getFechaReserva(), selected.getMesaId()) - selected.getPax();
+            selected.setLugaresDisponibles(lugaresDisponibles);
+            if (lugaresDisponibles < 0) {
+                JsfUtil.addErrorMessage("La mesa no tiene suficientes lugares disponibles para esa fecha");
+            } else {
+                persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ReservaCreated"));
 
-            List<Reserva> reservas = getFacade().ReservasPorFechaYMesa(selected.getFechaReserva(), selected.getMesaId());
-            for (Reserva reserva : reservas) {
-                reserva.setLugaresDisponibles(lugaresDisponibles);
-                getFacade().guardar(reserva);
+                List<Reserva> reservas = getFacade().ReservasPorFechaYMesa(selected.getFechaReserva(), selected.getMesaId());
+                for (Reserva reserva : reservas) {
+                    reserva.setLugaresDisponibles(lugaresDisponibles);
+                    getFacade().guardar(reserva);
 
+                }
+                if (!JsfUtil.isValidationFailed()) {
+                    items = null;    // Invalidate list of items to trigger re-query.
+                }
             }
-            if (!JsfUtil.isValidationFailed()) {
-                items = null;    // Invalidate list of items to trigger re-query.
-            }
+            getMesasPorFechaYPdv();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, "Error");
+            //e.printStackTrace();
         }
-        getMesasPorFechaYPdv();
     }
 
     public void update() {
@@ -120,6 +125,7 @@ public class ReservaController implements Serializable {
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
+    
         if (selected != null) {
             setEmbeddableKeys();
             try {

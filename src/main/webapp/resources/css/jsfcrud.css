@@ -23,8 +23,10 @@
     font-style: oblique;
     padding-left: 20px;
     padding-bottom: 10px;
-
-    background-color: beige
+    text-align: center;
+    vertical-align: middle;
+    line-height: 12px;
+    
 }
 
 #cabecera{
