@@ -4,9 +4,9 @@
     <jta-data-source>java:app/ReservasMesas</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+      <property name="javax.persistence.schema-generation.database.action" value="create-tables"/>
       <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
       <property name="eclipselink.logging.level" value="FINE"/>
-     </properties>
+    </properties>
   </persistence-unit>
 </persistence>

@@ -6,6 +6,8 @@
 package com.dnsoft.reservasmesas.controles;
 
 import com.dnsoft.reservasmesas.entidades.Mesa;
+import com.dnsoft.reservasmesas.entidades.Pdv;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -36,9 +38,19 @@ public class MesaFacade extends AbstractFacade<Mesa> {
         return qr.getResultList();
     }
 
+    public List<Mesa> findMesasDisponiblesPorPDVyDia(Pdv pdv, Date fecha) {
+        Query qr = em.createQuery("select mm from Mesa mm where mm.pdvId = ?2 and mm not in"
+                + "(select m from Mesa m, Reserva r where r.mesaId.id = m.id and r.fechaReserva = ?1 and r.lugaresDisponibles=0 and m.pdvId = ?2) order by mm.numero");
+
+        qr.setParameter(1, fecha);
+        qr.setParameter(2, pdv);
+        return qr.getResultList();
+    }
+
     public Integer findLugares() {
         Query qr = em.createQuery("select sum(m.lugares) from Mesa m ");
 
         return ((Long) qr.getSingleResult()).intValue();
     }
+
 }

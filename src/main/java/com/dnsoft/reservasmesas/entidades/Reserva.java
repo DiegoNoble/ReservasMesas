@@ -70,9 +70,7 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Cliente clienteId;
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    @Column(columnDefinition = "situacion_reserva")
+      @Enumerated(EnumType.STRING)
     private SituacionReserva situacionReserva;
 
     public Reserva() {

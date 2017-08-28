@@ -8,7 +8,7 @@
 
     <ui:composition>
 
-        <p:dialog id="ReservaCreateDlg" widgetVar="ReservaCreateDialog" modal="true" resizable="true" appendTo="@(body)" header="#{bundle.CreateReservaTitle}">
+        <p:dialog id="ReservaCreateDlg" widgetVar="ReservaDesdeDisponibilidad" modal="true" resizable="true" appendTo="@(body)" header="#{bundle.CreateReservaTitle}">
             <h:form id="ReservaCreateForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{reservaController.selected != null}">
@@ -54,7 +54,7 @@
 
 
                     </p:panelGrid>
-                    <p:commandButton actionListener="#{reservaController.create}" value="#{bundle.Save}" update="display,:ReservaListForm:datalist,:growl" oncomplete="handleSubmit(args,'ReservaCreateDialog');"/>
+                    <p:commandButton actionListener="#{reservaController.create}" value="#{bundle.Save}" update="display,:DisponibilidadListForm:datalist,:growl" oncomplete="handleSubmit(args,'ReservaCreateDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="ReservaCreateDialog.hide()"/>
                 </h:panelGroup>
             </h:form>

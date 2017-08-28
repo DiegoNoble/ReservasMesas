@@ -116,7 +116,8 @@ public class Disponibilidad implements Serializable {
     public void setPdv(Pdv pdv) {
         this.pdv = pdv;
     }
-    
+
+
 
     @Override
     public int hashCode() {

@@ -4,6 +4,7 @@ import com.dnsoft.reservasmesas.entidades.Reserva;
 import com.dnsoft.reservasmesas.controles.util.JsfUtil;
 import com.dnsoft.reservasmesas.controles.util.JsfUtil.PersistAction;
 import com.dnsoft.reservasmesas.entidades.Disponibilidad;
+import com.dnsoft.reservasmesas.entidades.Mesa;
 import com.dnsoft.reservasmesas.entidades.Pdv;
 import com.dnsoft.reservasmesas.entidades.SituacionReserva;
 import com.dnsoft.reservasmesas.entidades.Usuario;
@@ -35,13 +36,16 @@ public class ReservaController implements Serializable {
     private MesaFacade ejbMesaFacade;
     private List<Reserva> items = null;
     private Reserva selected;
-    private Date fechaReserva;
+    private Date fechaReserva = new Date();
     private Pdv pdv;
+    private Integer disponibilidad;
+    private List<Mesa> mesasDisponibles;
 
     public ReservaController() {
     }
 
     public Reserva getSelected() {
+
         return selected;
     }
 
@@ -61,8 +65,15 @@ public class ReservaController implements Serializable {
 
     public Reserva prepareCreate() {
         selected = new Reserva();
+        selected.setFechaReserva(fechaReserva);
+        disponibilidad = null;
         initializeEmbeddableKey();
         return selected;
+    }
+
+    public List<Mesa> getMesasDisponiblesPorPDV() {
+        mesasDisponibles = ejbMesaFacade.findMesasDisponiblesPorPDVyDia(pdv, fechaReserva);
+        return mesasDisponibles;
     }
 
     void actualizaDatosFecha() {
@@ -73,11 +84,47 @@ public class ReservaController implements Serializable {
             pax = pax + reserva.getPax();
         }
 
-        Disponibilidad datosFecha = ejbFechasFacade.getDatosFecha(fechaReserva, pdv);
+        Disponibilidad datosFecha = ejbFechasFacade.getDisponibilidad(fechaReserva, pdv);
         datosFecha.setDisponibilidad(lugares - pax);
         datosFecha.setPaxTotales(pax);
         datosFecha.setLugaresTotales(lugares);
         ejbFechasFacade.actualizarFecha(datosFecha);
+    }
+
+    public Integer getDisponiblidadDiaMesa() {
+
+        disponibilidad = ejbReservasFacade.lugaresDisponibles(selected.getMesaId().getLugares(), selected.getFechaReserva(), selected.getMesaId());
+        return disponibilidad;
+    }
+
+    public List<Reserva> getMesasPorFechaYPdv() {
+
+        items = getFacade().ReservasPorFecha(fechaReserva, pdv);
+        return items;
+    }
+
+    public List<Reserva> getItems() {
+        if (items == null) {
+            //items = getFacade().findAll();
+        }
+        return items;
+    }
+
+    public List<Reserva> findAllItems() {
+        items = getFacade().findAll();
+        return items;
+    }
+
+    public Reserva getReserva(java.lang.Long id) {
+        return getFacade().find(id);
+    }
+
+    public List<Reserva> getItemsAvailableSelectMany() {
+        return getFacade().findAll();
+    }
+
+    public List<Reserva> getItemsAvailableSelectOne() {
+        return getFacade().findAll();
     }
 
     public void create() {
@@ -85,27 +132,24 @@ public class ReservaController implements Serializable {
             selected.setFechaHoraRegistro(new Date());
             Integer lugaresDisponibles = getFacade().lugaresDisponibles(selected.getMesaId().getLugares(), selected.getFechaReserva(), selected.getMesaId()) - selected.getPax();
             selected.setLugaresDisponibles(lugaresDisponibles);
-            if (lugaresDisponibles < 0) {
-                //Solicitar mensaje de confirmacion para guardar en lista de espera
-                JsfUtil.addErrorMessage("La mesa no tiene suficientes lugares disponibles para esa fecha");
-            } else {
-                selected.setSituacionReserva(SituacionReserva.CONFIRMADA);
-                Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("Usuario");
-                selected.setUsuarioId(usuario);
-                persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ReservaCreated"));
 
-                List<Reserva> reservas = getFacade().ReservasPorFechaYMesa(selected.getFechaReserva(), selected.getMesaId());
+            selected.setSituacionReserva(SituacionReserva.CONFIRMADA);
+            Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("Usuario");
+            selected.setUsuarioId(usuario);
+            persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ReservaCreated"));
 
-                for (Reserva reserva : reservas) {
-                    reserva.setLugaresDisponibles(lugaresDisponibles);
-                    getFacade().guardar(reserva);
+            List<Reserva> reservas = getFacade().ReservasPorFechaYMesa(selected.getFechaReserva(), selected.getMesaId());
 
-                }
-                actualizaDatosFecha();
-                if (!JsfUtil.isValidationFailed()) {
-                    items = null;    // Invalidate list of items to trigger re-query.
-                }
+            for (Reserva reserva : reservas) {
+                reserva.setLugaresDisponibles(lugaresDisponibles);
+                getFacade().guardar(reserva);
+
             }
+            actualizaDatosFecha();
+            if (!JsfUtil.isValidationFailed()) {
+                items = null;    // Invalidate list of items to trigger re-query.
+            }
+
             getMesasPorFechaYPdv();
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, "Error");
@@ -115,21 +159,19 @@ public class ReservaController implements Serializable {
 
     public void update() {
         selected.setFechaHoraRegistro(new Date());
-        Integer lugaresDisponibles = getFacade().lugaresDisponibles(selected.getMesaId().getLugares(), selected.getFechaReserva(), selected.getMesaId()) - selected.getPax();
-        selected.setLugaresDisponibles(lugaresDisponibles);
-        if (lugaresDisponibles < 0) {
-            JsfUtil.addErrorMessage("La mesa no tiene suficientes lugares disponibles para esa fecha");
-        } else {
-            persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("ReservaUpdated"));
+        //Integer lugaresDisponibles = getFacade().lugaresDisponibles(selected.getMesaId().getLugares(), selected.getFechaReserva(), selected.getMesaId()) - selected.getPax();
+        //selected.setLugaresDisponibles(lugaresDisponibles);
 
-            List<Reserva> reservas = getFacade().ReservasPorFechaYMesa(selected.getFechaReserva(), selected.getMesaId());
-            for (Reserva reserva : reservas) {
-                reserva.setLugaresDisponibles(lugaresDisponibles);
-                getFacade().guardar(reserva);
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("ReservaUpdated"));
+        Integer lugaresDisponibles = getFacade().lugaresDisponibles(selected.getMesaId().getLugares(), selected.getFechaReserva(), selected.getMesaId());
+        List<Reserva> reservas = getFacade().ReservasPorFechaYMesa(selected.getFechaReserva(), selected.getMesaId());
+        for (Reserva reserva : reservas) {
+            reserva.setLugaresDisponibles(lugaresDisponibles);
+            getFacade().guardar(reserva);
 
-            }
-            actualizaDatosFecha();
         }
+        actualizaDatosFecha();
+
         getMesasPorFechaYPdv();
     }
 
@@ -149,24 +191,6 @@ public class ReservaController implements Serializable {
         }
         actualizaDatosFecha();
         getMesasPorFechaYPdv();
-    }
-
-    public List<Reserva> getMesasPorFechaYPdv() {
-
-        items = getFacade().ReservasPorFecha(fechaReserva, pdv);
-        return items;
-    }
-
-    public List<Reserva> getItems() {
-        if (items == null) {
-            //items = getFacade().findAll();
-        }
-        return items;
-    }
-
-    public List<Reserva> findAllItems() {
-        items = getFacade().findAll();
-        return items;
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
@@ -197,18 +221,6 @@ public class ReservaController implements Serializable {
                 JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             }
         }
-    }
-
-    public Reserva getReserva(java.lang.Long id) {
-        return getFacade().find(id);
-    }
-
-    public List<Reserva> getItemsAvailableSelectMany() {
-        return getFacade().findAll();
-    }
-
-    public List<Reserva> getItemsAvailableSelectOne() {
-        return getFacade().findAll();
     }
 
     @FacesConverter(forClass = Reserva.class)
@@ -266,6 +278,14 @@ public class ReservaController implements Serializable {
 
     public void setPdv(Pdv pdv) {
         this.pdv = pdv;
+    }
+
+    public Integer getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public void setDisponibilidad(Integer disponibilidad) {
+        this.disponibilidad = disponibilidad;
     }
 
 }

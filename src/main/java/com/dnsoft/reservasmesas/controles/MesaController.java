@@ -128,6 +128,8 @@ public class MesaController implements Serializable {
           items = getFacade().findAllOrderByPdvMesa();
         return items;
     }
+      
+     
     @FacesConverter(forClass=Mesa.class)
     public static class MesaControllerConverter implements Converter {
 

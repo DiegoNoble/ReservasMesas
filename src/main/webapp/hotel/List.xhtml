@@ -44,7 +44,7 @@
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":HotelViewForm" oncomplete="PF('HotelViewDialog').show()" disabled="#{empty hotelController.selected}"/>
                             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":HotelEditForm" oncomplete="PF('HotelEditDialog').show()" disabled="#{empty hotelController.selected}"/>
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{hotelController.destroy}" update=":growl,datalist" disabled="#{empty hotelController.selected}"/>
-                            <p:commandButton id="CrearFechas" icon="ui-icon-plus"   value="Crear Fechas" actionListener="#{fechasController.crearFechas()}"/>
+                            <p:commandButton id="CrearFechas" icon="ui-icon-plus"   value="Crear Fechas" actionListener="#{disponibilidadController.crearFechas()}"/>
                            
                         </f:facet>
                     </p:dataTable>

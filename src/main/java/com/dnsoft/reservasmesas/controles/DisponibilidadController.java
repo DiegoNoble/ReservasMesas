@@ -6,6 +6,7 @@ import com.dnsoft.reservasmesas.controles.util.JsfUtil.PersistAction;
 import com.dnsoft.reservasmesas.entidades.Pdv;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,10 +29,15 @@ public class DisponibilidadController implements Serializable {
     private DisponibilidadFacade ejbFacade;
     @EJB
     private PdvFacade ejbPdvFacade;
+    @EJB
+    private MesaFacade ejbMesaFacade;
+    
     private List<Disponibilidad> items = null;
     private Disponibilidad selected;
-    private Date desde;
-    private Date hasta;
+    private Date desde = new Date();
+    private Date hasta = new Date();
+    private Pdv pdv;
+
 
     public DisponibilidadController() {
     }
@@ -62,9 +68,16 @@ public class DisponibilidadController implements Serializable {
 
     public void crearFechas() {
         List<Pdv> pdvs = ejbPdvFacade.findAll();
+        Integer lugares = ejbMesaFacade.findLugares();
         for (Pdv pdv : pdvs) {
-            ejbFacade.fechas(pdv);
+            ejbFacade.fechas(pdv, lugares);
         }
+
+    }
+
+    public List<Disponibilidad> disponibilidadEntreFechasPorPDV() {
+        items = ejbFacade.getDisponibilidadEntreFechas(desde, hasta, pdv);
+        return items;
 
     }
 
@@ -143,7 +156,7 @@ public class DisponibilidadController implements Serializable {
                 return null;
             }
             DisponibilidadController controller = (DisponibilidadController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "FechasController");
+                    getValue(facesContext.getELContext(), null, "DisponibilidadController");
             return controller.getFechas(getKey(value));
         }
 
@@ -174,5 +187,31 @@ public class DisponibilidadController implements Serializable {
         }
 
     }
+
+    public Date getDesde() {
+        return desde;
+    }
+
+    public void setDesde(Date desde) {
+        this.desde = desde;
+    }
+
+    public Date getHasta() {
+        return hasta;
+    }
+
+    public void setHasta(Date hasta) {
+        this.hasta = hasta;
+    }
+
+    public Pdv getPdv() {
+        return pdv;
+    }
+
+    public void setPdv(Pdv pdv) {
+        this.pdv = pdv;
+    }
+
+ 
 
 }

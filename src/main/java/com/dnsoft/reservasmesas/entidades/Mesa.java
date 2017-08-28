@@ -126,7 +126,7 @@ public class Mesa implements Serializable {
 
     @Override
     public String toString() {
-        return "Nro. "+numero+" - "+pdvId.getNombre()+", "+lugares+" lugares";
+        return "Mesa nro "+numero+", para "+lugares+" pax";
     }
 
 }

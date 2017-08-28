@@ -17,103 +17,93 @@
             <h:form id="DisponibilidadListForm">
                 <p:panel header="#{bundle.ListReservaTitle}">
 
-                    <div id="filtro" >
-                        
-                                <p:outputLabel value="Desde" for="fechaReserva" />
-                                &nbsp;
-                                <p:calendar id="fechaReserva" pattern="dd/MM/yyyy" value="#{reservaController.fechaReserva}" />
-                                &nbsp;
-                                <p:outputLabel value="Hasta" for="fechaReserva" />
-                                &nbsp;
-                                <p:calendar id="fechaReserva" pattern="dd/MM/yyyy" value="#{reservaController.fechaReserva}" />
-                                &nbsp;
-                                <p:outputLabel value="Punto de venta" for="pdvId" />
-                                &nbsp;
-                                <p:selectOneMenu id="pdvId" value="#{reservaController.pdv}" >
-                                    <f:selectItems value="#{pdvController.itemsAvailableSelectOne}"
-                                                   var="pdvIdItem"
-                                                   itemLabel="#{pdvIdItem.nombre}"
-                                                   itemValue="#{pdvIdItem}"/>
-                                </p:selectOneMenu>
-                                &nbsp;&nbsp;
-                                <p:commandButton id="btnBuscar" value="Buscar" actionListener="#{reservaController.getMesasPorFechaYPdv()}" update="datalist"/> 
-                           
-                    </div>
-                    <br></br>
-                    <p:dataTable id="datalist"
-                                 selectionMode="single"  value="#{reservaController.items}" editable="true" var="item" selection="#{reservaController.selected}"
-                                 paginator="true"
-                                 rowKey="#{item.id}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
-                                 >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                    <p:panelGrid columns="7">
 
                         <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Fecha/Hora de registro"/>
-                            </f:facet>
-                            <h:outputText value="#{item.fechaHoraRegistro}">
-                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                            </h:outputText>
+                            <p:outputLabel value="Desde" for="desde" />
                         </p:column>
 
                         <p:column>
+                            <p:calendar id="desde" pattern="dd/MM/yyyy" value="#{disponibilidadController.desde}" >
+                                <p:ajax event="dateSelect" listener="#{disponibilidadController.disponibilidadEntreFechasPorPDV()}" update="datalist"/>
+                        </p:calendar>
+                        </p:column>
+
+                        <p:column>
+                            <p:outputLabel value="Hasta" for="hasta" />
+                        </p:column>
+
+                        <p:column>
+                            <p:calendar id="hasta" pattern="dd/MM/yyyy" value="#{disponibilidadController.hasta}" >
+                                <p:ajax event="dateSelect" listener="#{disponibilidadController.disponibilidadEntreFechasPorPDV()}" update="datalist"/>
+                            </p:calendar>
+                        </p:column>
+
+                        <p:column>
+                            <p:outputLabel value="Punto de venta" for="pdvId" />
+                        </p:column>
+
+                        <p:column>
+                            <p:selectOneMenu id="pdvId" value="#{reservaController.pdv}" >
+                                <f:selectItems value="#{pdvController.itemsAvailableSelectOne}"
+                                               var="pdvIdItem"
+                                               itemLabel="#{pdvIdItem.nombre}"
+                                               itemValue="#{pdvIdItem}"/>
+                                <p:ajax event="change" listener="#{disponibilidadController.disponibilidadEntreFechasPorPDV()}" update="datalist"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton id="btnBuscar" value="Buscar" actionListener="#{disponibilidadController.disponibilidadEntreFechasPorPDV()}" update="datalist"/> 
+                        </p:column>
+                    </p:panelGrid>
+
+                    <br></br>
+                    <p:dataTable id="datalist"
+                                 selectionMode="single"  value="#{disponibilidadController.items}" editable="true" var="item" selection="#{disponibilidadController.selected}" filteredValue="#{disponibilidadController.disponibilidadEntreFechasPorPDV()}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50">
+                                  
+                        <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListReservaTitle_fechaReserva}"/>
+                                <h:outputText value="Fecha"/>
                             </f:facet>
-                            <h:outputText value="#{item.fechaReserva}">
+                            <h:outputText value="#{item.fecha}">
                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListReservaTitle_clienteId}"/>
+                                <h:outputText value="Lugares totales"/>
                             </f:facet>
-                            <h:outputText value="#{item.clienteId.apellidos}, #{item.clienteId.nombres}"/>
+                            <h:outputText value="#{item.lugaresTotales}"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Mesa"/>
+                                <h:outputText value="Pax"/>
                             </f:facet>
-                            <h:outputText value="#{item.mesaId.numero} - #{item.mesaId.pdvId}"/>
+                            <h:outputText value="#{item.paxTotales}"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListReservaTitle_pax}"/>
+                                <h:outputText value="Disponibildad"/>
                             </f:facet>
-                            <h:outputText value="#{item.pax}"/>
+                            <h:outputText value="#{item.disponibilidad}"/>
                         </p:column>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListReservaTitle_lugaresDisponibles}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.lugaresDisponibles}"/>
+                        <p:column style="width:26px;text-align: center">
+                            <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{reservaController.prepareCreate}" update=":DisponibilidadListForm" oncomplete="PF('ReservaDesdeDisponibilidad').show()"/>
                         </p:column>
-
-
-
-
-                        <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{reservaController.prepareCreate}" update=":ReservaCreateForm" oncomplete="PF('ReservaCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":ReservaViewForm" oncomplete="PF('ReservaViewDialog').show()" disabled="#{empty reservaController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ReservaEditForm" oncomplete="PF('ReservaEditDialog').show()" disabled="#{empty reservaController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{reservaController.destroy}" update=":growl,datalist" disabled="#{empty reservaController.selected}"/>
-                        </f:facet>
                     </p:dataTable>
 
                 </p:panel>
             </h:form>
-
-            <ui:include src="Create.xhtml"/>
-            <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
+            <ui:include src="Create_desde_disponibilidad.xhtml"/>
         </ui:define>
     </ui:composition>
 
