@@ -14,12 +14,16 @@
         </ui:define>
 
         <ui:define name="body">
-            <h:form id="ReservaListForm">
+            <h:form id="DisponibilidadListForm">
                 <p:panel header="#{bundle.ListReservaTitle}">
 
                     <div id="filtro" >
                         
-                                <p:outputLabel value="Fecha reserva" for="fechaReserva" />
+                                <p:outputLabel value="Desde" for="fechaReserva" />
+                                &nbsp;
+                                <p:calendar id="fechaReserva" pattern="dd/MM/yyyy" value="#{reservaController.fechaReserva}" />
+                                &nbsp;
+                                <p:outputLabel value="Hasta" for="fechaReserva" />
                                 &nbsp;
                                 <p:calendar id="fechaReserva" pattern="dd/MM/yyyy" value="#{reservaController.fechaReserva}" />
                                 &nbsp;

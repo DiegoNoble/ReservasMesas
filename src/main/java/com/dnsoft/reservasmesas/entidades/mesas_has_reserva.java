@@ -10,8 +10,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,7 +31,7 @@ import javax.validation.constraints.Size;
 @Table(name = "reserva")
 @NamedQueries({
     @NamedQuery(name = "Reserva.findAll", query = "SELECT r FROM Reserva r")})
-public class Reserva implements Serializable {
+public class mesas_has_reserva implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -70,19 +68,17 @@ public class Reserva implements Serializable {
     @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Cliente clienteId;
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    @Column(columnDefinition = "situacion_reserva")
-    private SituacionReserva situacionReserva;
+    
+    private String situacionReserva;
 
-    public Reserva() {
+    public mesas_has_reserva() {
     }
 
-    public Reserva(Long id) {
+    public mesas_has_reserva(Long id) {
         this.id = id;
     }
 
-    public Reserva(Long id, Date fechaHoraRegistro, Date fechaReserva, int lugaresDisponibles, int pax) {
+    public mesas_has_reserva(Long id, Date fechaHoraRegistro, Date fechaReserva, int lugaresDisponibles, int pax) {
         this.id = id;
         this.fechaHoraRegistro = fechaHoraRegistro;
         this.fechaReserva = fechaReserva;
@@ -98,6 +94,7 @@ public class Reserva implements Serializable {
         this.id = id;
     }
 
+   
     public Date getFechaHoraRegistro() {
         return fechaHoraRegistro;
     }
@@ -162,14 +159,6 @@ public class Reserva implements Serializable {
         this.clienteId = clienteId;
     }
 
-    public SituacionReserva getSituacionReserva() {
-        return situacionReserva;
-    }
-
-    public void setSituacionReserva(SituacionReserva situacionReserva) {
-        this.situacionReserva = situacionReserva;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -180,10 +169,10 @@ public class Reserva implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Reserva)) {
+        if (!(object instanceof mesas_has_reserva)) {
             return false;
         }
-        Reserva other = (Reserva) object;
+        mesas_has_reserva other = (mesas_has_reserva) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

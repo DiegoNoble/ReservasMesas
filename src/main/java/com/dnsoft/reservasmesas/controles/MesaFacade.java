@@ -31,9 +31,14 @@ public class MesaFacade extends AbstractFacade<Mesa> {
         super(Mesa.class);
     }
 
-   public List<Mesa> findAllOrderByPdvMesa() {
+    public List<Mesa> findAllOrderByPdvMesa() {
         Query qr = em.createQuery("from Mesa m order by m.pdvId, m.numero");
         return qr.getResultList();
     }
-    
+
+    public Integer findLugares() {
+        Query qr = em.createQuery("select sum(m.lugares) from Mesa m ");
+
+        return ((Long) qr.getSingleResult()).intValue();
+    }
 }

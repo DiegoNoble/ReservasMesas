@@ -9,6 +9,7 @@
 }
 .ui-layout-north .ui-layout-unit-content {
     overflow: visible !important;
+    
 }
 .ui-widget-header {
     font-size: 13px !important;
@@ -28,9 +29,11 @@
     line-height: 12px;
     
 }
-
+#titulo{
+    font-size: 120px !important;
+}
 #cabecera{
-    font-size: 15px !important;
+    
     text-align: center;
     text-transform: uppercase;
 }

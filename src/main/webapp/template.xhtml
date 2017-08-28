@@ -6,12 +6,13 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <h:head id="cabecera">
-        <title><ui:insert name="title">Sistema de gestión de reservas de Gastronomía</ui:insert></title>
-        <h:outputStylesheet library="css" name="jsfcrud.css"/>
-        <h:outputScript library="js" name="jsfcrud.js"/>
-        <f:event type="preRenderView" listener="#{usuarioController.verificarSesion()}"/>
-
+    <h:head >
+        <div id="cabecera">
+            <title><ui:insert name="title">Sistema de gestión de reservas de Gastronomía</ui:insert></title>
+            <h:outputStylesheet library="css" name="jsfcrud.css"/>
+            <h:outputScript library="js" name="jsfcrud.js"/>
+            <!--<f:event type="preRenderView" listener=""/>-->
+        </div>
     </h:head>
 
     <!--<h:body style="background-image: url(resources/bg.jpg)" >-->
@@ -19,18 +20,21 @@
         <p:growl id="growl" life="3000" />
 
         <p:layout  fullPage="true">
-            <p:layoutUnit position="west" size="180" header="#{bundle.Maintenance}" collapsible="true" resizable="true">
+            <p:layoutUnit position="west" size="180" header="Menú" collapsible="true" resizable="true">
                 <h:form id="menuForm" >
                     <p:menu>
-                        <p:menuitem value="#{bundle.Home}" outcome="/index" icon="ui-icon-home"/>
+                        <p:menuitem value="Menu" outcome="/index" icon="ui-icon-home"/>
                         <p:submenu label="Ver">
                             <p:menuitem value="Usuarios" outcome="/usuario/List.xhtml" /> 
                             <p:menuitem value="Hoteles" outcome="/hotel/List.xhtml" />
                             <p:menuitem value="PDVs" outcome="/pdv/List.xhtml" />
                             <p:menuitem value="Mesas" outcome="/mesa/List.xhtml" />
                             <p:menuitem value="Clientes" outcome="/cliente/List.xhtml" />
+                            <p:menuitem value ="Disponibilidad" outcome="/reserva/Disponibilidad.xhtml"/>
                             <p:menuitem value="Reservas" outcome="/reserva/List.xhtml" />
                         </p:submenu>
+                                       
+                        
                         <p:submenu label="Sair">
                             <p:menuitem value="Log off" outcome="/usuario/login.xhtml" icon="ui-icon-close"/>
                         </p:submenu>

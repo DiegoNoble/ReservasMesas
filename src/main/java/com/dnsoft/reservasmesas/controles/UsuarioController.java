@@ -151,7 +151,7 @@ public class UsuarioController implements Serializable {
         try {
             Usuario us = (Usuario) contexto.getExternalContext().getSessionMap().get("Usuario");
             if (us == null) {
-                contexto.getExternalContext().redirect("/ReservasMesas/faces/usuario/login.xhtml");
+                contexto.getExternalContext().redirect("/ReservasMesas/faces/reserva/List.xhtml");
             } else {
             }
         } catch (Exception e) {

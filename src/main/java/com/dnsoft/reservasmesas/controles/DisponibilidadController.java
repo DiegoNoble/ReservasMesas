@@ -1,10 +1,12 @@
 package com.dnsoft.reservasmesas.controles;
 
-import com.dnsoft.reservasmesas.entidades.Fechas;
+import com.dnsoft.reservasmesas.entidades.Disponibilidad;
 import com.dnsoft.reservasmesas.controles.util.JsfUtil;
 import com.dnsoft.reservasmesas.controles.util.JsfUtil.PersistAction;
+import com.dnsoft.reservasmesas.entidades.Pdv;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -18,23 +20,27 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("fechasController")
+@Named("disponibilidadController")
 @SessionScoped
-public class FechasController implements Serializable {
+public class DisponibilidadController implements Serializable {
 
     @EJB
-    private com.dnsoft.reservasmesas.controles.FechasFacade ejbFacade;
-    private List<Fechas> items = null;
-    private Fechas selected;
+    private DisponibilidadFacade ejbFacade;
+    @EJB
+    private PdvFacade ejbPdvFacade;
+    private List<Disponibilidad> items = null;
+    private Disponibilidad selected;
+    private Date desde;
+    private Date hasta;
 
-    public FechasController() {
+    public DisponibilidadController() {
     }
 
-    public Fechas getSelected() {
+    public Disponibilidad getSelected() {
         return selected;
     }
 
-    public void setSelected(Fechas selected) {
+    public void setSelected(Disponibilidad selected) {
         this.selected = selected;
     }
 
@@ -44,18 +50,22 @@ public class FechasController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private FechasFacade getFacade() {
+    private DisponibilidadFacade getFacade() {
         return ejbFacade;
     }
 
-    public Fechas prepareCreate() {
-        selected = new Fechas();
+    public Disponibilidad prepareCreate() {
+        selected = new Disponibilidad();
         initializeEmbeddableKey();
         return selected;
     }
-    
-    public void crearFechas(){
-        ejbFacade.fechas();
+
+    public void crearFechas() {
+        List<Pdv> pdvs = ejbPdvFacade.findAll();
+        for (Pdv pdv : pdvs) {
+            ejbFacade.fechas(pdv);
+        }
+
     }
 
     public void create() {
@@ -77,7 +87,7 @@ public class FechasController implements Serializable {
         }
     }
 
-    public List<Fechas> getItems() {
+    public List<Disponibilidad> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -112,19 +122,19 @@ public class FechasController implements Serializable {
         }
     }
 
-    public Fechas getFechas(java.lang.Long id) {
+    public Disponibilidad getFechas(java.lang.Long id) {
         return getFacade().find(id);
     }
 
-    public List<Fechas> getItemsAvailableSelectMany() {
+    public List<Disponibilidad> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Fechas> getItemsAvailableSelectOne() {
+    public List<Disponibilidad> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Fechas.class)
+    @FacesConverter(forClass = Disponibilidad.class)
     public static class FechasControllerConverter implements Converter {
 
         @Override
@@ -132,7 +142,7 @@ public class FechasController implements Serializable {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            FechasController controller = (FechasController) facesContext.getApplication().getELResolver().
+            DisponibilidadController controller = (DisponibilidadController) facesContext.getApplication().getELResolver().
                     getValue(facesContext.getELContext(), null, "FechasController");
             return controller.getFechas(getKey(value));
         }
@@ -154,11 +164,11 @@ public class FechasController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Fechas) {
-                Fechas o = (Fechas) object;
+            if (object instanceof Disponibilidad) {
+                Disponibilidad o = (Disponibilidad) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Fechas.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Disponibilidad.class.getName()});
                 return null;
             }
         }

@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -26,11 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Diego
  */
 @Entity
-@Table(name = "fechas")
+@Table(name = "disponibilidad")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Fechas.findAll", query = "SELECT f FROM Fechas f")})
-public class Fechas implements Serializable {
+    @NamedQuery(name = "Disponibilidad.findAll", query = "SELECT f FROM Disponibilidad f")})
+public class Disponibilidad implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,19 +44,27 @@ public class Fechas implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
+    @Column(name = "disponibilidad")
+    private Integer disponibilidad = 0;
+    @Column(name = "pax_totales")
+    private Integer paxTotales = 0;
+    @Column(name = "lugares_totales")
+    private Integer lugaresTotales = 0;
+    @ManyToOne(optional = false)
+    private Pdv pdv;
 
-    public Fechas() {
+    public Disponibilidad() {
     }
 
-    public Fechas(Long id) {
+    public Disponibilidad(Long id) {
         this.id = id;
     }
 
-    public Fechas(Date fecha) {
+    public Disponibilidad(Date fecha) {
         this.fecha = fecha;
     }
 
-    public Fechas(Long id, Date fecha) {
+    public Disponibilidad(Long id, Date fecha) {
         this.id = id;
         this.fecha = fecha;
     }
@@ -76,6 +85,39 @@ public class Fechas implements Serializable {
         this.fecha = fecha;
     }
 
+    public Integer getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public void setDisponibilidad(Integer disponibilidad) {
+        this.disponibilidad = disponibilidad;
+    }
+
+    public Integer getPaxTotales() {
+        return paxTotales;
+    }
+
+    public void setPaxTotales(Integer paxTotales) {
+        this.paxTotales = paxTotales;
+    }
+
+    public Integer getLugaresTotales() {
+        return lugaresTotales;
+    }
+
+    public void setLugaresTotales(Integer lugaresTotales) {
+        this.lugaresTotales = lugaresTotales;
+    }
+
+    public Pdv getPdv() {
+        return pdv;
+    }
+
+    public void setPdv(Pdv pdv) {
+        this.pdv = pdv;
+    }
+    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -86,10 +128,10 @@ public class Fechas implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Fechas)) {
+        if (!(object instanceof Disponibilidad)) {
             return false;
         }
-        Fechas other = (Fechas) object;
+        Disponibilidad other = (Disponibilidad) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -100,5 +142,5 @@ public class Fechas implements Serializable {
     public String toString() {
         return "com.dnsoft.reservasmesas.entidades.Fechas[ id=" + id + " ]";
     }
-    
+
 }
